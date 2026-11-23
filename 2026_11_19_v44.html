@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="hu">
+
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hangköz-konszonancia teszt</title>
+</head>
+
+<body>
+
+<div id="login">
+
+<h2>Hangköz-konszonancia teszt</h2>
+
+<p>
+Kedves Kitöltő!<br>
+Csak 5-10 percre rabolom az idődet.<br>
+Ez egy konszonancia-disszonancia teszt.
+A teszt során 44 darab 4 másodperces hangmintát fogsz hallani.<br>
+Minden hangmintában két hangköz hallható majd.<br>
+Neked az a dolgod, hogy eldöntsd, melyik hangköz hangzik kellemesebben, összhangzatosabban, azaz melyik konszonánsabb.<br>
+Kérlek, fontold meg a választ minden esetben, ne kapkodj!
+</p>
+
+<p>
+Kérjük, fejhallgatóval vagy fülhallgatóval végezd a kitöltést!<br>
+A hangminták tetszőleges alkalommal visszahallgathatók, de visszafelé nem lehet haladni a mintákban.<br>
+Azt javaslom, hogy minden mintát legalább kétszer hallgass meg.<br>
+Ha úgy érzed, elfáradtál, nyugodtan tarts szünetet, de a tesztből ne lépj ki!<br>
+Köszönöm a segítségedet!
+</p>
+
+<p><b>Résztvevő azonosító</b></p>
+
+<input type="text" id="participant">
+
+<br><br>
+
+<p><b>Nem</b></p>
+
+<label>
+<input type="radio" name="gender" value="Ferfi">
+Férfi
+</label>
+
+<br>
+
+<label>
+<input type="radio" name="gender" value="No">
+Nő
+</label>
+
+<br><br>
+
+<p><b>Zenei előképzettség</b></p>
+
+<label>
+<input type="radio" name="music" value="Semmi">
+Semmi
+</label>
+
+<br>
+
+<label>
+<input type="radio" name="music" value="Alapszintu">
+Alapszintű
+</label>
+
+<br>
+
+<label>
+<input type="radio" name="music" value="Kozepes">
+Közepes
+</label>
+
+<br>
+
+<label>
+<input type="radio" name="music" value="Magas">
+Magas
+</label>
+
+<br><br>
+
+<button onclick="startTest()">
+Teszt indítása
+</button>
+
+</div>
+
+
+
+<div id="experiment" style="display:none;">
+
+<h2>Hangköz-konszonancia teszt</h2>
+
+<p id="status"></p>
+
+<audio id="player" controls></audio>
+
+<p>
+Melyik hangköz volt konszonánsabb?
+</p>
+
+<label>
+<input type="radio" name="choice" value="1">
+Az első
+</label>
+
+<br>
+
+<label>
+<input type="radio" name="choice" value="2">
+A második
+</label>
+
+<br><br>
+
+<button onclick="nextItem()">
+Következő
+</button>
+
+</div>
+
+<script>
+
+let participantId = "";
+let gender = "";
+let musicLevel = "";
+
+const files = [
+"item01.wav",
+"item02.wav",
+"item03.wav",
+"item04.wav",
+"item05.wav",
+"item06.wav",
+"item07.wav",
+"item08.wav",
+"item09.wav",
+"item10.wav",
+"item11.wav",
+"item12.wav",
+"item13.wav",
+"item14.wav",
+"item15.wav",
+"item16.wav",
+"item17.wav",
+"item18.wav",
+"item19.wav",
+"item20.wav",
+"item21.wav",
+"item22.wav",
+"item23.wav",
+"item24.wav",
+"item25.wav",
+"item26.wav",
+"item27.wav",
+"item28.wav",
+"item29.wav",
+"item30.wav",
+"item31.wav",
+"item32.wav",
+"item33.wav",
+"item34.wav",
+"item35.wav",
+"item36.wav",
+"item37.wav",
+"item38.wav",
+"item39.wav",
+"item40.wav",
+"item41.wav",
+"item42.wav",
+"item43.wav",
+"item44.wav"
+];
+
+let randomizedFiles = [];
+let current = 0;
+let answers = [];
+
+function shuffle(array)
+{
+    for(let i=array.length-1;i>0;i--)
+    {
+        const j=Math.floor(Math.random()*(i+1));
+        [array[i],array[j]]=[array[j],array[i]];
+    }
+
+    return array;
+}
+
+function startTest()
+{
+    participantId =
+        document.getElementById("participant")
+        .value.trim();
+
+    if(participantId === "")
+    {
+        alert("Adj meg résztvevőazonosítót!");
+        return;
+    }
+
+    const g =
+        document.querySelector(
+            'input[name="gender"]:checked'
+        );
+
+    if(!g)
+    {
+        alert("Válaszd ki a nemet!");
+        return;
+    }
+
+    gender = g.value;
+
+    const m =
+        document.querySelector(
+            'input[name="music"]:checked'
+        );
+
+    if(!m)
+    {
+        alert("Válaszd ki a zenei előképzettséget!");
+        return;
+    }
+
+    musicLevel = m.value;
+
+    randomizedFiles =
+        shuffle([...files]);
+
+    document.getElementById("login")
+        .style.display = "none";
+
+    document.getElementById("experiment")
+        .style.display = "block";
+
+    loadItem();
+}
+
+function loadItem()
+{
+    document.getElementById("status").innerHTML =
+        "Hangminta "
+        + (current+1)
+        + " / "
+        + randomizedFiles.length;
+
+    document.getElementById("player").src =
+        randomizedFiles[current];
+
+    document
+        .querySelectorAll(
+            'input[name="choice"]'
+        )
+        .forEach(
+            x => x.checked = false
+        );
+}
+
+function nextItem()
+{
+    const selected =
+        document.querySelector(
+            'input[name="choice"]:checked'
+        );
+
+    if(!selected)
+    {
+        alert("Válassz!");
+        return;
+    }
+
+    answers.push({
+        participant : participantId,
+        gender : gender,
+        music : musicLevel,
+        item : randomizedFiles[current],
+        choice : selected.value
+    });
+
+    current++;
+
+    if(current >= randomizedFiles.length)
+    {
+        saveResults();
+        return;
+    }
+
+    loadItem();
+}
+
+function saveResults()
+{
+    let csv =
+        "participant,gender,musical_training,item,choice\n";
+
+    answers.forEach(a =>
+    {
+        csv +=
+            a.participant + "," +
+            a.gender + "," +
+            a.music + "," +
+            a.item + "," +
+            a.choice + "\n";
+    });
+
+    const blob =
+        new Blob(
+            [csv],
+            {type:"text/csv"}
+        );
+
+    const link =
+        document.createElement("a");
+
+    link.href =
+        URL.createObjectURL(blob);
+
+    link.download =
+        participantId + "_eredmeny.csv";
+
+    link.click();
+
+    document.body.innerHTML =
+        "<h2>Köszönjük a kitöltést!</h2>";
+}
+
+</script>
+
+</body>
+</html>
