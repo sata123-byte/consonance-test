@@ -309,28 +309,24 @@ function saveResults()
     });
 
     
-alert("Ide eljutottam");   
-
-    
+  
 fetch(
   "https://script.google.com/macros/s/AKfycbw9sr_vte3T6um0gJONiF_FxcWiuUCIOBfPMk8Tq9ZZ46dSBbSpKWrSAs3T95vm664zTg/exec",
   {
     method: "POST",
+    mode: "no-cors",
     headers:
     {
-      "Content-Type": "application/json"
+      "Content-Type": "text/plain"
     },
     body: JSON.stringify(
     {
       csv: csv
     })
   }
-)
-.then(response => response.text())
-.then(data => alert("Siker: " + data))
-.catch(error => alert("Hiba: " + error));
+);
+   
 
- alert("A fetch lefutott");
 
     
     const blob =
@@ -358,6 +354,7 @@ fetch(
 
 </body>
 </html>
+
 
 
 
