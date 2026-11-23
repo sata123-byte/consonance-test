@@ -322,6 +322,10 @@ fetch(
     })
   }
 )
+.then(response => response.text())
+.then(data => alert("Siker: " + data))
+.catch(error => alert("Hiba: " + error));
+
     
     const blob =
         new Blob(
@@ -348,4 +352,5 @@ fetch(
 
 </body>
 </html>
+
 
